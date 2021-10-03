@@ -1,4 +1,4 @@
-package fireopal.stonecliffs;
+package fireopal.erodedsurface;
 
 import java.util.Random;
 
@@ -19,6 +19,8 @@ public class NewDefaultSurfaceBuilder {
 
         BlockPos targetPos = new BlockPos(x, height - 1, z);
         BlockPos.Mutable newTargetPos;
+        Direction[] xAxisDirections = {Direction.EAST, Direction.WEST};
+        Direction[] zAxisDirections = {Direction.NORTH, Direction.SOUTH};
         Direction[] directions = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
         int validSlope = 0;
         boolean isOnChunkBorder = (x % 16 == 0 || x % 16 == 15) && (z % 16 == 0 || z % 16 == 15);
@@ -27,15 +29,52 @@ public class NewDefaultSurfaceBuilder {
             newTargetPos = targetPos.offset(d).mutableCopy();
 
             if (!(chunk.getBlockState(newTargetPos).isAir()) && chunk.getBlockState(newTargetPos.up()).isAir()) {
-                validSlope += 3;
+                validSlope += 5;
             } else if ((!(chunk.getBlockState(newTargetPos.up()).isAir()) && chunk.getBlockState(newTargetPos.up(2)).isAir())) {
-                validSlope += 2;
+                validSlope += 4;
             } else if ((!(chunk.getBlockState(newTargetPos.down()).isAir()) && chunk.getBlockState(newTargetPos).isAir())) {
-                validSlope += 2;
+                validSlope += 4;
+            }
+
+            if (d == Direction.NORTH || d == Direction.SOUTH) {
+                for (Direction xDirection : xAxisDirections) {
+                    newTargetPos = targetPos.offset(d).offset(xDirection).mutableCopy();
+
+                    if (!(chunk.getBlockState(newTargetPos).isAir()) && chunk.getBlockState(newTargetPos.up()).isAir()) {
+                        validSlope += 5;
+                    } else if ((!(chunk.getBlockState(newTargetPos.up()).isAir()) && chunk.getBlockState(newTargetPos.up(2)).isAir())) {
+                        validSlope += 4;
+                    } else if ((!(chunk.getBlockState(newTargetPos.down()).isAir()) && chunk.getBlockState(newTargetPos).isAir())) {
+                        validSlope += 4;
+                    }
+                }
+            } else if (d == Direction.EAST || d == Direction.WEST) {
+                for (Direction zDirection : zAxisDirections) {
+                    newTargetPos = targetPos.offset(d).offset(zDirection).mutableCopy();
+
+                    if (!(chunk.getBlockState(newTargetPos).isAir()) && chunk.getBlockState(newTargetPos.up()).isAir()) {
+                        validSlope += 3;
+                    } else if ((!(chunk.getBlockState(newTargetPos.up()).isAir()) && chunk.getBlockState(newTargetPos.up(2)).isAir())) {
+                        validSlope += 2;
+                    } else if ((!(chunk.getBlockState(newTargetPos.down()).isAir()) && chunk.getBlockState(newTargetPos).isAir())) {
+                        validSlope += 2;
+                    }
+                }
             }
         }
+
+
+        int threshold = 18 + (int)((3 * noise) / 8);
         
-        boolean canGenerate = isOnChunkBorder ? validSlope >= 1 : validSlope >= 6 || validSlope == 0;
+        boolean canGenerate = isOnChunkBorder ? validSlope >= 1 : validSlope >= threshold || validSlope == 0;
+
+        if (validSlope > 0) {
+            j = j - (int)(threshold * 0.5 / validSlope) ;
+        } else {
+            j = 0;
+        }
+
+        j = j <= 0 ? 0 : j;
 
         if (canGenerate) { 
             if (j == 0) {

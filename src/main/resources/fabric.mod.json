@@ -1,29 +1,23 @@
 {
   "schemaVersion": 1,
-  "id": "stone_cliffs",
+  "id": "eroded_surface",
   "version": "${version}",
 
-  "name": "Stone Cliffs",
+  "name": "Eroded Surface Builder",
   "description": "Grass doesn't generate on cliffs sides anymore!",
   "authors": [
     "Me!"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/firenh/eroded_surface_builder"
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/stone_cliffs/icon.png",
+  "icon": "assets/eroded_surface/icon.png",
 
   "environment": "*",
-  "entrypoints": {
-    "main": [
-      "fireopal.stonecliffs.StoneCliffs"
-    ]
-  },
   "mixins": [
-    "stone_cliffs.mixins.json"
+    "eroded_surface.mixins.json"
   ],
 
   "depends": {

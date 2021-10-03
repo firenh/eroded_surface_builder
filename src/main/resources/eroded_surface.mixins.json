@@ -1,12 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "fireopal.stonecliffs.mixin",
+  "package": "fireopal.erodedsurface.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
   ],
   "client": [
-    "ExampleMixin"
+    "DefaultSurfaceBuilderMixin"
   ],
   "injectors": {
     "defaultRequire": 1
